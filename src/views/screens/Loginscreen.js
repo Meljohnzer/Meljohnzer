@@ -8,6 +8,7 @@ import Loader from "../components/Loader";
 import Ggl from "../../../assets/bg/Google-Logo-PNG3.png";
 import Fb from "../../../assets/bg/Facebook-Logo-PNG4.png";
 import Apl from "../../../assets/bg/Apple-Logo-PNG5.png";
+import Logo from "../components/logo";
 
 
 const Loginscreen = ({navigation}) => {
@@ -45,13 +46,14 @@ const Loginscreen = ({navigation}) => {
       let userData = await AsyncStorage.getItem('user');
       if (userData) {
         userData = JSON.parse(userData);
+     
         if (inputs.email == userData.email &&
           inputs.password == userData.password
           ){
             AsyncStorage.setItem(
               'user', JSON.stringify({...userData, loggedIn: true}),
             );
-            navigation.navigate('Homescreen');
+            navigation.navigate('Homescreen',{fname:userData.firstname,lname:userData.Lastname,email:userData.email});
           } 
           else {
               Alert.alert('Error', 'Invalid credentials')
@@ -84,10 +86,12 @@ const Loginscreen = ({navigation}) => {
         contentContainerStyle={{
             paddingTop: 50,
             paddingHorizontal: 20,
+            justifyContent: 'center',
+            flex:1,
             
         }}
         >
-          
+          <Logo/>
           <View style={[Universalstyles.signupbg, {height: 'auto'}]}>
       <Text style= {Universalstyles.txt}>
         Login account
@@ -119,7 +123,7 @@ const Loginscreen = ({navigation}) => {
             onChangeText = {text => handleOnChange(text, 'password')}
             />
            <Text 
-            onPress={() => navigation.navigate('Forgotpassword')}
+            onPress={() => navigation.navigate('Forgotscreen')}
             style={{color: 'blue', textAlign: "center", marginBottom: 10}}>Forgot Password</Text>
           
           

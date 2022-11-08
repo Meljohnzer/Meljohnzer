@@ -1,17 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView, Text, View, ImageBackground, Keyboard, Alert,} from 'react-native'
+import { ScrollView, Text, View, ImageBackground, Keyboard, Alert,Image} from 'react-native'
 import React from 'react'
 import Input from "../components/Input";
 import {Universalstyles} from "../../const/Universalstyle";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
+import Logo from "../components/logo";
+
 
 
 
 const Signupscreen = ({navigation}) => {
   const [inputs, setInputs] = React.useState({
     email: '',
-    username: '',
+    firstname: '',
+    Lastname: '',
     password: '',
     cpassword: '',
 
@@ -30,11 +33,18 @@ const Signupscreen = ({navigation}) => {
       handleError('Please enter valid email address', 'email');
       valid = false;
     }
-    if (!inputs.username){
-      handleError('Please enter your name', 'username');
+    if (!inputs.firstname){
+      handleError('Please enter your Firstname', 'firstname');
       valid = false;
-    } else if (inputs.username.match(/[0-9]/)){
-      handleError('Name should not have numbers', 'username');
+    } else if (inputs.firstname.match(/[0-9]/)){
+      handleError('Name should not have numbers', 'firstname');
+      valid = false;
+    }
+    if (!inputs.Lastname){
+      handleError('Please enter your Lastname', 'Lastname');
+      valid = false;
+    } else if (inputs.Lastname.match(/[0-9]/)){
+      handleError('Name should not have numbers', 'Lastname');
       valid = false;
     }
     if (!inputs.password){
@@ -71,7 +81,7 @@ const Signupscreen = ({navigation}) => {
       setLoading(false);
       try {
         AsyncStorage.setItem('user', JSON.stringify(inputs));
-        navigation.navigate('Loginscreen');
+        navigation.navigate('Homescreen',{fname:inputs.firstname,lname:inputs.Lastname,email:inputs.email});
       } catch (error) {
         Alert.alert('Error', 'Something went wrong')
       }
@@ -88,6 +98,7 @@ const Signupscreen = ({navigation}) => {
   
   return (
     
+   
     <ImageBackground 
     source={require('../../../assets/bg/bgimage5.jpg')}
     
@@ -99,25 +110,47 @@ const Signupscreen = ({navigation}) => {
         contentContainerStyle={{
             paddingTop: 50,
             paddingHorizontal: 20,
+            flex:1,
+             justifyContent: 'center',
             
         }}
         >
-          
+          {/* <View style={{flex:0,justifyContent:"center",alignItems:'center'}}>
+          <Image style={{width:300,height:300,resizeMode:'contain'}} source={require("../../../assets/logo-no-background.png")}/>
+          </View> */}
+          <Logo/>
+   
           <View style={[Universalstyles.signupbg, {height: 'auto'}]}>
-      <Text style= {Universalstyles.txt}>
+      
+         
+          
+          <Text style= {Universalstyles.txt}>
+
         Register account
         </Text>
 
+     
         
             <Input 
-            placeholder= 'Fullname' 
+            placeholder= 'Firstname' 
             iconName= 'account-outline' 
             
-            error={errors.username}
+            error={errors.firstname}
             onFocus={() =>{
-              handleError(null, 'username');
+              handleError(null, 'firstname');
             }}
-            onChangeText = {text => handleOnChange(text, 'username')}
+            onChangeText = {text => handleOnChange(text, 'firstname')}
+            />
+
+<Input 
+            placeholder= 'Lastname' 
+            iconName= 'account-outline' 
+            
+            error={errors.Lastname}
+            onFocus={() =>{
+              handleError(null, 'Lastname');
+            }}
+            onChangeText = {text => handleOnChange(text, 'Lastname')}
             />
             <Input 
             placeholder= 'Email' 
