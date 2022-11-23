@@ -9,6 +9,10 @@ import Ggl from "../../../assets/bg/Google-Logo-PNG3.png";
 import Fb from "../../../assets/bg/Facebook-Logo-PNG4.png";
 import Apl from "../../../assets/bg/Apple-Logo-PNG5.png";
 import Logo from "../components/logo";
+import { collection,setDoc,doc,addDoc } from "firebase/firestore"; 
+import { db } from "../../../config";
+import { signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../../my-first-application1/config";
 
 
 const Loginscreen = ({navigation}) => {
@@ -43,25 +47,32 @@ const Loginscreen = ({navigation}) => {
     setLoading(true);
     setTimeout(async() => {
       setLoading(false);
-      let userData = await AsyncStorage.getItem('user');
-      if (userData) {
-        userData = JSON.parse(userData);
+      // let userData = await AsyncStorage.getItem('user');
+      // if (userData) {
+      //   userData = JSON.parse(userData);
      
-        if (inputs.email == userData.email &&
-          inputs.password == userData.password
-          ){
-            AsyncStorage.setItem(
-              'user', JSON.stringify({...userData, loggedIn: true}),
-            );
-            navigation.navigate('Homescreen',{fname:userData.firstname,lname:userData.Lastname,email:userData.email});
-          } 
-          else {
-              Alert.alert('Error', 'Invalid credentials')
-          }
-      }
-          else {
-              Alert.alert('Error','User does not exists')
-          }
+      //   if (inputs.email == userData.email &&
+      //     inputs.password == userData.password
+      //     ){
+      //       AsyncStorage.setItem(
+      //         'user', JSON.stringify({...userData, loggedIn: true}),
+      //       );
+      //       navigation.navigate('Homescreen',{fname:userData.firstname,lname:userData.Lastname,email:userData.email});
+      //     } 
+      //     else {
+      //         Alert.alert('Error', 'Invalid credentials')
+      //     }
+      // }
+      //     else {
+      //         Alert.alert('Error','User does not exists')
+          // }
+          signInWithEmailAndPassword(auth,inputs.email, inputs.password)
+          .then((userCredential) => {
+           navigation.navigate('Homescreen')
+          })
+          .catch((error) => {
+            alert(error)
+          })
         }, 3000)
   };
 

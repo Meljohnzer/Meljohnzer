@@ -6,6 +6,11 @@ import {Universalstyles} from "../../const/Universalstyle";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
 import Logo from "../components/logo";
+import { collection,setDoc,doc,addDoc } from "firebase/firestore"; 
+import { db } from "../../../config";
+import { signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../../my-first-application1/config";
+
 
 
 
@@ -79,13 +84,47 @@ const Signupscreen = ({navigation}) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      try {
-        AsyncStorage.setItem('user', JSON.stringify(inputs));
-        navigation.navigate('Homescreen',{fname:inputs.firstname,lname:inputs.Lastname,email:inputs.email});
-      } catch (error) {
-        Alert.alert('Error', 'Something went wrong')
-      }
-    }, 3000);
+      // try {
+      //   AsyncStorage.setItem('user', JSON.stringify(inputs));
+      //   navigation.navigate('Homescreen',{fname:inputs.firstname,lname:inputs.Lastname,email:inputs.email});
+      // } catch (error) {
+      //   Alert.alert('Error', 'Something went wrong')
+      // }
+      createUserWithEmailAndPassword(auth,inputs.email, inputs.password)
+      .then((userCredential) => {
+        
+        navigation.navigate('Loginscreen')
+        setDoc(doc(db, "Register",userCredential.user.uid), {
+              email: inputs.email,
+              Firstname: inputs.firstname,
+              Lastname: inputs.Lastname,
+              password: inputs.password,
+              cpassword: inputs.cpassword,
+            }).then(()=>{
+                  console.warn("Register Succesfully")
+                }).catch((error) => {
+                  console.warn(error)
+                })
+
+      })
+      .catch((error) => {
+        alert('error')
+      })
+    }
+
+    //   addDoc(collection(db, "Register"), {
+    //     email: inputs.email,
+    //     Firstname: inputs.firstname,
+    //     Lastname: inputs.Lastname,
+    //     password: inputs.password,
+    //     cpassword: inputs.cpassword,
+    //   }).then(()=>{
+    //     console.warn("Register Succesfully")
+    //   }).catch((error) => {
+    //     console.warn(error)
+    //   })
+    // }
+, 3000);
   };
 
   const handleOnChange = (text, input) => {
